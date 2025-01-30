@@ -1,6 +1,7 @@
 """
 Entrega 1 Analisis explorativo
 Abby Donis 22440
+Wilson Calderón 22018
 """
 import pandas as pd
 import zipfile
@@ -119,4 +120,59 @@ if "voteCount" in datos.columns and "title" in datos.columns:
     print("\n4.3. La película con más votos:")
     print(top_votes)
 else:
-    print("\n4.3. No se encontró la columna 'vote_count' en los datos.")
+    print("\n4.3. No se encontró la columna 'voteCount' en los datos.")
+
+# Inciso 4.4: La peor película según los votos de los usuarios
+
+print("\n++ 4.4. La peor película según los votos de los usuarios ++")
+
+# Verificar si las columnas necesarias existen
+if "voteAvg" in datos.columns and "title" in datos.columns:
+    worst_movie = datos[['title', 'voteAvg']].dropna().sort_values(by='voteAvg', ascending=True).head(1)
+    print("\nLa peor película según el promedio de votos:")
+    print(worst_movie)
+else:
+    print("\nNo se encontró la columna 'voteAvg' en los datos.")
+
+# Inciso 4.5: Cantidad de películas por año y gráfico de barras
+
+import matplotlib.pyplot as plt
+
+# Inciso 4.5: Cantidad de películas por año y gráfico de barras
+
+import matplotlib.pyplot as plt
+
+print("\n++ 4.5. Cantidad de películas por año y año con más películas ++")
+
+# Verificar si la columna 'releaseDate' existe
+if "releaseDate" in datos.columns:
+    # Convertir la columna a tipo fecha (por si no lo está) y extraer solo el año
+    datos["releaseYear"] = pd.to_datetime(datos["releaseDate"], errors="coerce").dt.year
+
+    # Contar cuántas películas se hicieron en cada año
+    peliculas_por_anio = datos["releaseYear"].value_counts().sort_index()
+
+    # Mostrar los resultados
+    print("\nCantidad de películas por año:")
+    print(peliculas_por_anio)
+
+    # Encontrar el año con más películas
+    anio_mas_peliculas = peliculas_por_anio.idxmax()
+    cantidad_maxima = peliculas_por_anio.max()
+
+    print(f"\nEl año con más películas fue {anio_mas_peliculas} con {cantidad_maxima} películas.")
+
+    # Crear el gráfico de barras
+    plt.figure(figsize=(12, 6))
+    plt.bar(peliculas_por_anio.index, peliculas_por_anio.values, color="skyblue")
+    plt.xlabel("Año")
+    plt.ylabel("Cantidad de Películas")
+    plt.title("Número de películas por año")
+    plt.xticks(rotation=45)
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
+    plt.show()
+
+else:
+    print("\nNo se encontró la columna 'releaseDate' en los datos.")
+
+#Ifs usados principalmente para ver si hay error en las variables
