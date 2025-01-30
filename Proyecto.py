@@ -136,12 +136,6 @@ else:
 
 # Inciso 4.5: Cantidad de películas por año y gráfico de barras
 
-import matplotlib.pyplot as plt
-
-# Inciso 4.5: Cantidad de películas por año y gráfico de barras
-
-import matplotlib.pyplot as plt
-
 print("\n++ 4.5. Cantidad de películas por año y año con más películas ++")
 
 # Verificar si la columna 'releaseDate' existe
@@ -176,8 +170,6 @@ else:
     print("\nNo se encontró la columna 'releaseDate' en los datos.")
 
 # Inciso 4.6: Análisis de géneros en películas recientes, predominantes y más largas
-
-import matplotlib.pyplot as plt
 
 print("\n++ 4.6. Análisis de Géneros ++")
 
@@ -260,8 +252,6 @@ else:
     print("\nNo se encontraron las columnas necesarias ('genres', 'revenue', 'budget') en los datos.")
 
 # Inciso 4.8: Influencia de la cantidad de actores en los ingresos y evolución en el tiempo
-
-import matplotlib.pyplot as plt
 
 print("\n++ 4.8. Análisis de la cantidad de actores y los ingresos ++")
 
