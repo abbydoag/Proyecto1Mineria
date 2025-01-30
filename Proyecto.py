@@ -175,4 +175,119 @@ if "releaseDate" in datos.columns:
 else:
     print("\nNo se encontró la columna 'releaseDate' en los datos.")
 
+# Inciso 4.6: Análisis de géneros en películas recientes, predominantes y más largas
+
+import matplotlib.pyplot as plt
+
+print("\n++ 4.6. Análisis de Géneros ++")
+
+# Asegurar que la columna releaseDate sea reconocida como fecha
+if "releaseDate" in datos.columns and "genres" in datos.columns:
+    datos["releaseDate"] = pd.to_datetime(datos["releaseDate"], errors="coerce")
+    
+    # Obtener las 20 películas más recientes
+    peliculas_recientes = datos.sort_values(by="releaseDate", ascending=False).head(20)
+    
+    # Extraer el primer género de cada película (separado por "|")
+    peliculas_recientes["genero_principal"] = peliculas_recientes["genres"].str.split("|").str[0]
+    
+    print("\nGéneros principales de las 20 películas más recientes:")
+    print(peliculas_recientes[["title", "genero_principal"]])
+
+    # Género principal más frecuente en todo el dataset
+    datos["genero_principal"] = datos["genres"].str.split("|").str[0]
+    genero_predominante = datos["genero_principal"].value_counts()
+    
+    print("\nGénero principal que predomina en el conjunto de datos:")
+    print(genero_predominante)
+
+    # Gráfico de barras de los géneros predominantes
+    plt.figure(figsize=(12, 6))
+    genero_predominante.head(10).plot(kind="bar", color="skyblue", edgecolor="black", alpha=0.7)
+    plt.xlabel("Género")
+    plt.ylabel("Cantidad de Películas")
+    plt.title("Géneros Predominantes en el Dataset")
+    plt.xticks(rotation=45)
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
+    plt.show()
+
+    # Películas más largas (top 10 por duración)
+    if "runtime" in datos.columns:
+        peliculas_largas = datos.sort_values(by="runtime", ascending=False).head(10)
+        peliculas_largas["genero_principal"] = peliculas_largas["genres"].str.split("|").str[0]
+
+        print("\nGéneros principales de las películas más largas:")
+        print(peliculas_largas[["title", "runtime", "genero_principal"]])
+    
+else:
+    print("\nNo se encontraron las columnas necesarias ('releaseDate' y 'genres') en los datos.")
+
+# Inciso 4.7: Género principal con mayores ganancias
+
+print("\n++ 4.7. Género principal con mayores ganancias ++")
+
+# Verificar si las columnas necesarias existen
+if "genres" in datos.columns and "revenue" in datos.columns and "budget" in datos.columns:
+    # Calcular las ganancias (revenue - budget)
+    datos["ganancias"] = datos["revenue"] - datos["budget"]
+
+    # Extraer el primer género de cada película
+    datos["genero_principal"] = datos["genres"].str.split("|").str[0]
+
+    # Calcular la ganancia total por género
+    ganancias_por_genero = datos.groupby("genero_principal")["ganancias"].sum().sort_values(ascending=False)
+
+    print("\nGanancias totales por género principal:")
+    print(ganancias_por_genero)
+
+    # Género con mayores ganancias
+    genero_mayor_ganancia = ganancias_por_genero.idxmax()
+    mayor_ganancia = ganancias_por_genero.max()
+
+    print(f"\nEl género con mayores ganancias es '{genero_mayor_ganancia}' con un total de {mayor_ganancia:,.2f} en ganancias.")
+
+    # Graficar las ganancias por género
+    plt.figure(figsize=(12, 6))
+    ganancias_por_genero.head(10).plot(kind="bar", color="skyblue", edgecolor="black", alpha=0.7)
+    plt.xlabel("Género")
+    plt.ylabel("Ganancias Totales")
+    plt.title("Géneros con Mayores Ganancias")
+    plt.xticks(rotation=45)
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
+    plt.show()
+
+else:
+    print("\nNo se encontraron las columnas necesarias ('genres', 'revenue', 'budget') en los datos.")
+
+# Inciso 4.8: Influencia de la cantidad de actores en los ingresos y evolución en el tiempo
+
+import matplotlib.pyplot as plt
+
+print("\n++ 4.8. Análisis de la cantidad de actores y los ingresos ++")
+
+# Filtrar valores extremos y asegurarse de que los datos sean numéricos
+if "actorsAmount" in datos.columns and "revenue" in datos.columns and "releaseDate" in datos.columns:
+    # Convertir a numérico, eliminando errores y valores nulos
+    datos["actorsAmount"] = pd.to_numeric(datos["actorsAmount"], errors="coerce")
+    datos["revenue"] = pd.to_numeric(datos["revenue"], errors="coerce")
+
+    # Filtrar datos con actores dentro de un rango lógico (ejemplo: 1 a 500)
+    datos_filtrados = datos[(datos["actorsAmount"] > 0) & (datos["actorsAmount"] <= 500)]
+
+    # Relación entre la cantidad de actores y los ingresos
+    plt.figure(figsize=(10, 5))
+    plt.scatter(datos_filtrados["actorsAmount"], datos_filtrados["revenue"], alpha=0.5, color="blue")
+    plt.xlabel("Cantidad de Actores")
+    plt.ylabel("Ingresos ($)")
+    plt.title("Relación entre la cantidad de actores y los ingresos (Valores Filtrados)")
+    plt.grid(True, linestyle="--", alpha=0.6)
+    plt.show()
+
+    print("\nInterpretación:")
+    print("Se han filtrado valores extremos (> 500 actores) para mejorar la visualización.")
+    print("Si los puntos muestran una tendencia ascendente, significa que más actores podrían influir en mayores ingresos.")
+    print("Si no hay un patrón claro, significa que la cantidad de actores no tiene un impacto significativo en los ingresos.")
+
+else:
+    print("\nNo se encontraron las columnas necesarias ('actorsAmount', 'revenue' y 'releaseDate') en los datos.")
 #Ifs usados principalmente para ver si hay error en las variables
