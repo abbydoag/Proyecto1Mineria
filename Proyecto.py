@@ -301,3 +301,105 @@ else:
 #correlaciones
 correlacion = datos[['originalTitle','revenue', 'popularity', 'castWomenAmount', 'castMenAmount']]
 print(correlacion)
+
+# Inciso 4.17: Duración promedio de las películas por género principal
+
+print("\n++ 4.17. Duración promedio de las películas por género principal ++")
+
+# Verificar si las columnas necesarias existen
+if "genres" in datos.columns and "runtime" in datos.columns:
+    # Extraer el primer género de cada película
+    datos["genero_principal"] = datos["genres"].str.split("|").str[0]
+
+    # Calcular la duración promedio por género
+    duracion_por_genero = datos.groupby("genero_principal")["runtime"].mean().sort_values(ascending=False)
+
+    print("\nDuración promedio de las películas por género:")
+    print(duracion_por_genero)
+
+    # Graficar la duración promedio de las películas por género
+    plt.figure(figsize=(12, 6))
+    duracion_por_genero.plot(kind="bar", color="skyblue", edgecolor="black", alpha=0.7)
+    plt.xlabel("Género")
+    plt.ylabel("Duración Promedio (minutos)")
+    plt.title("Duración Promedio de las Películas por Género")
+    plt.xticks(rotation=45)
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
+    plt.show()
+
+else:
+    print("\nNo se encontraron las columnas necesarias ('genres', 'runtime') en los datos.")
+
+#PUNTOS EXTRA COMIENZAN AQUI
+
+# Inciso 4.18: Relación entre el presupuesto y las calificaciones
+"""
+print("\n++ 4.18. Relación entre el presupuesto y las calificaciones ++")
+
+# Verificar si las columnas necesarias existen
+if "budget" in datos.columns and "voteAvg" in datos.columns:
+    # Convertir a numérico para evitar errores
+    datos["budget"] = pd.to_numeric(datos["budget"], errors="coerce")
+    datos["voteAvg"] = pd.to_numeric(datos["voteAvg"], errors="coerce")
+
+    # Filtrar presupuestos irreales (ejemplo: mayor a $10,000,000,000)
+    datos_filtrados = datos[(datos["budget"] > 0) & (datos["budget"] <= 1e10)]
+
+    # Generar gráfico de dispersión entre presupuesto y calificaciones
+    plt.figure(figsize=(10, 5))
+    plt.scatter(datos_filtrados["budget"], datos_filtrados["voteAvg"], alpha=0.5, color="purple")
+    plt.xlabel("Presupuesto ($)")
+    plt.ylabel("Calificación Promedio")
+    plt.title("Relación entre el Presupuesto y las Calificaciones")
+    plt.grid(True, linestyle="--", alpha=0.6)
+    plt.show()
+
+    print("\nInterpretación:")
+    print("Si los puntos muestran una tendencia ascendente, significa que las películas con mayor presupuesto reciben mejores calificaciones.")
+    print("Si los puntos están dispersos sin un patrón claro, significa que el presupuesto no afecta significativamente las calificaciones.")
+
+else:
+    print("\nNo se encontraron las columnas necesarias ('budget', 'voteAvg') en los datos.")
+
+# Inciso 4.19: Productoras con más películas y mayores ingresos
+
+print("\n++ 4.19. Productoras con más películas y mayores ingresos ++")
+
+# Verificar si las columnas necesarias existen
+if "productionCompany" in datos.columns and "revenue" in datos.columns:
+    # Contar cuántas películas ha producido cada compañía
+    productoras_mas_peliculas = datos["productionCompany"].value_counts().head(10)
+
+    print("\nTop 10 productoras con más películas:")
+    print(productoras_mas_peliculas)
+
+    # Calcular ingresos totales por productora
+    ingresos_por_productora = datos.groupby("productionCompany")["revenue"].sum().sort_values(ascending=False).head(10)
+
+    print("\nTop 10 productoras con mayores ingresos:")
+    print(ingresos_por_productora)
+
+    # Graficar las 10 productoras con más películas
+    plt.figure(figsize=(12, 6))
+    productoras_mas_peliculas.plot(kind="bar", color="orange", edgecolor="black", alpha=0.7)
+    plt.xlabel("Productora")
+    plt.ylabel("Cantidad de Películas")
+    plt.title("Top 10 Productoras con Más Películas")
+    plt.xticks(rotation=45)
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
+    plt.show()
+
+    # Graficar las 10 productoras con mayores ingresos
+    plt.figure(figsize=(12, 6))
+    ingresos_por_productora.plot(kind="bar", color="green", edgecolor="black", alpha=0.7)
+    plt.xlabel("Productora")
+    plt.ylabel("Ingresos Totales ($)")
+    plt.title("Top 10 Productoras con Mayores Ingresos")
+    plt.xticks(rotation=45)
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
+    plt.show()
+
+else:
+    print("\nNo se encontraron las columnas necesarias ('productionCompany', 'revenue') en los datos.")
+"""
+#Ifs usados principalmente para ver si hay error en las variables
