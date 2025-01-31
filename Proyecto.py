@@ -15,9 +15,10 @@ with zipfile.ZipFile('movies.zip', 'r') as z:
 #delimitacion a 3 decimales
 pd.set_option('display.float_format', '{:.3f}'.format)
 
+"""
 #Inciso 1
 print(datos.describe())
-
+"""
 
 #Inciso 2 (col = columan)
 """
@@ -26,7 +27,7 @@ Es tipo objeto = cualitiativa normal u ordinal
 No. finito de categorías = ordinal
 -----------------
 Es numerica = se revisa si es continua o discreta (revisar si el no. de valores unicos es grande o pequeño)
-"""
+""""""
 print('++ Clasificación tipos de variables ++')
 print('.......................................')
 def variable_type(col):
@@ -42,6 +43,9 @@ def variable_type(col):
 for col in datos.columns:
     tipo = variable_type(datos[col])
     print (f'Columna: {col} --- Tipo: {tipo}')
+"""
+
+"""
 # Inciso 3: Análisis de Normalidad y Tablas de Frecuencia
 
 # Identificar variables cuantitativas
@@ -93,7 +97,9 @@ print("Para las variables cualitativas, se generaron tablas de frecuencia que mu
 print("  - El valor de cada categoría.")
 print("  - Su frecuencia absoluta.")
 print("  - Su porcentaje respecto al total.")
+"""
 
+"""
 # Inciso 4: Análisis de presupuesto, ingresos y votos
 
 print("\n++ Inciso 4: Análisis de presupuesto, ingresos y votos ++")
@@ -105,7 +111,9 @@ if "budget" in datos.columns and "title" in datos.columns:
     print(top_budget)
 else:
     print("\n4.1. No se encontró la columna 'budget' en los datos.")
+"""
 
+"""
 # 4.2. Las 10 películas con más ingresos
 if "revenue" in datos.columns and "title" in datos.columns:
     top_revenue = datos[['title', 'revenue']].dropna().sort_values(by='revenue', ascending=False).head(10)
@@ -121,7 +129,10 @@ if "voteCount" in datos.columns and "title" in datos.columns:
     print(top_votes)
 else:
     print("\n4.3. No se encontró la columna 'voteCount' en los datos.")
+"""
 
+
+"""
 # Inciso 4.4: La peor película según los votos de los usuarios
 
 print("\n++ 4.4. La peor película según los votos de los usuarios ++")
@@ -168,7 +179,9 @@ if "releaseDate" in datos.columns:
 
 else:
     print("\nNo se encontró la columna 'releaseDate' en los datos.")
+"""
 
+"""
 # Inciso 4.6: Análisis de géneros en películas recientes, predominantes y más largas
 
 print("\n++ 4.6. Análisis de Géneros ++")
@@ -281,3 +294,10 @@ if "actorsAmount" in datos.columns and "revenue" in datos.columns and "releaseDa
 else:
     print("\nNo se encontraron las columnas necesarias ('actorsAmount', 'revenue' y 'releaseDate') en los datos.")
 #Ifs usados principalmente para ver si hay error en las variables
+"""
+
+
+# Inciso 4.9
+#correlaciones
+correlacion = datos[['originalTitle','revenue', 'popularity', 'castWomenAmount', 'castMenAmount']]
+print(correlacion)
