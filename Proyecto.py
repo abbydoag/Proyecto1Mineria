@@ -98,7 +98,6 @@ print("  - Su porcentaje respecto al total.")
 
 
 # Inciso 4: Análisis de presupuesto, ingresos y votos
-
 print("\n++ Inciso 4: Análisis de presupuesto, ingresos y votos ++")
 
 # 4.1. Las 10 películas con más presupuesto
@@ -287,7 +286,6 @@ else:
 #Ifs usados principalmente para ver si hay error en las variables
 
 
-
 # Inciso 4.9
 correlacion = datos[['revenue', 'popularity', 'castWomenAmount', 'castMenAmount']].corr()
 print(correlacion)
@@ -442,19 +440,18 @@ plt.show()
 
 
 #Inciso 4.16
-
-
-
-#Inciso 5.4
-
-
-#Inciso 5.5
-
-
-#Inciso 5.6
+datos['actorsPopularity'] = pd.to_numeric(datos['actorsPopularity'], errors='coerce')
+corr_actorPopularity_rev = datos[['actorsPopularity', 'revenue']].corr()
+print(corr_actorPopularity_rev)
+#scatterplot
+plt.figure(figsize=(10,6))
+plt.scatter(datos['actorsPopularity'], datos['revenue'], alpha=0.5, color='orange')
+plt.title('Relación entre popularidad del elenco e ingresos')
+plt.xlabel('Popularidad elenco')
+plt.ylabel('Ingresos')
+plt.show()
 
 # Inciso 4.17: Duración promedio de las películas por género principal
-
 print("\n++ 4.17. Duración promedio de las películas por género principal ++")
 
 # Verificar si las columnas necesarias existen
@@ -484,7 +481,6 @@ else:
 #PUNTOS EXTRA COMIENZAN AQUI
 
 # Inciso 4.18: Relación entre el presupuesto y las calificaciones
-"""
 print("\n++ 4.18. Relación entre el presupuesto y las calificaciones ++")
 
 # Verificar si las columnas necesarias existen
@@ -552,5 +548,85 @@ if "productionCompany" in datos.columns and "revenue" in datos.columns:
 
 else:
     print("\nNo se encontraron las columnas necesarias ('productionCompany', 'revenue') en los datos.")
-"""
 #Ifs usados principalmente para ver si hay error en las variables
+
+#Inciso 5.4 
+datos['productionCountry'] = datos['productionCountry'].str.strip()
+datos['revenue'] = pd.to_numeric(datos['revenue'], errors='coerce')
+datos['productionCountry'] = datos['productionCountry'].fillna('')
+#division |
+datos['productionCountry'] = datos['productionCountry'].apply(
+    lambda x: x.split('|') if isinstance(x, str) else [])
+#Peliculas/pais
+countries = [country for sublist in datos['productionCountry'] for country in sublist]
+num_movies_country = pd.Series(countries).value_counts()
+#Top 5
+top_5 = num_movies_country.head(5)
+top_5_countries = top_5.index.tolist()
+
+top_countries = datos[datos['productionCountry'].apply(
+    lambda x: any(country in top_5_countries for country in x))]
+#Ingresos top 5
+rev_country = {}
+for _, row in top_countries.iterrows():
+    countries = row['productionCountry']
+    revenue = row['revenue']
+    for country in countries:
+        if country in top_5_countries:
+            if country not in rev_country:
+                rev_country[country] = {'total_revenue': 0, 'count': 0}
+            rev_country[country]['total_revenue'] += revenue
+            rev_country[country]['count'] += 1
+avg_rev_country = {country: data['total_revenue'] / data['count'] for country, data in rev_country.items()}
+avg_rev = pd.DataFrame(list(avg_rev_country.items()), columns=['Pais', 'Ingreso promedio'])
+avg_rev = avg_rev.sort_values(by='Ingreso promedio', ascending=False)
+
+print(' Top 5 paises con mas producciones e ingresos')
+print('+---------------------------------------------+')
+print(top_5)
+print(avg_rev)
+
+#Inciso 5.5
+datos['genres'] = datos['genres'].str.strip()
+datos['genres'] = datos['genres'].fillna('')
+datos['genres'] = datos['genres'].apply(
+    lambda x: x.split('|') if isinstance(x, str) else [])
+#genero
+all_genres=[genre for sublist in datos['genres'] for genre in sublist]
+genresDF = pd.DataFrame(all_genres, columns=['genre'])
+#popularidad
+genresDF['popularity'] = datos['popularity'].repeat(datos['genres'].apply(len)).reset_index(drop=True)
+avg_popularity_genre = genresDF.groupby('genre')['popularity'].mean().sort_values(ascending=False)
+print('Popularidad promedio por genero')
+print(avg_popularity_genre)
+#grafica
+plt.figure(figsize=(12,6))
+avg_popularity_genre.plot(kind='bar', color='blue')
+plt.title('Popularidad promedio por genero')
+plt.xlabel('Genero')
+plt.ylabel('Popularidad (Promedio)')
+plt.xticks(rotation=45) #orientacion meses
+plt.show()
+
+pop_genre = [genresDF[genresDF['genre'] == genre]['popularity'].values for genre in avg_popularity_genre.index]
+plt.boxplot(pop_genre, vert=False)
+plt.yticks(range(1, len(avg_popularity_genre)+1), avg_popularity_genre.index)
+plt.xlabel('Popularida (Promedio)')
+plt.ylabel('Genero')
+plt.title('Distribucion popularidad por genero')
+plt.show()
+
+
+#Inciso 5.6
+datos['runtime'] = pd.to_numeric(datos['runtime'], errors='coerce')
+datos['revenue'] = pd.to_numeric(datos['revenue'], errors='coerce')
+#correlacion
+runtime_rev = datos[['runtime', 'revenue']].corr()
+print(runtime_rev)
+plt.figure(figsize=(10, 6))
+plt.scatter(datos['runtime'], datos['revenue'], alpha=0.5, color='blue')
+
+plt.title('Relación entre Duración e Ingresos')
+plt.xlabel('Duración (minutos)')
+plt.ylabel('Ingresos')
+plt.show()
