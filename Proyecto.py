@@ -10,9 +10,7 @@ import matplotlib.pyplot as plt
 import statsmodels.api as sm
 
 #Lee zip
-with zipfile.ZipFile('Movies.zip', 'r') as z:
-    with z.open('Movies.csv') as f:
-        datos = pd.read_csv(f, encoding='ISO-8859-1')
+datos = pd.read_csv("movies.csv", encoding='ISO-8859-1')
 #delimitacion a 3 decimales
 pd.set_option('display.float_format', '{:.3f}'.format)
 
