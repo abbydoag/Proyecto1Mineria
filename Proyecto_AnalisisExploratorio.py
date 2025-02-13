@@ -4,10 +4,8 @@ Abby Donis 22440
 Wilson Calderón 22018
 """
 import pandas as pd
-import zipfile
-import numpy as np
 import matplotlib.pyplot as plt
-import statsmodels.api as sm
+
 
 #Lee zip
 datos = pd.read_csv("movies.csv", encoding='ISO-8859-1')
